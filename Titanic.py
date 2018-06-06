@@ -1,3 +1,4 @@
+
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
@@ -83,3 +84,4 @@ if __name__ == '__main__':
     Passenger_ID = truetestdata['PassengerId']
     pd_result = pd.concat([Passenger_ID, pd.DataFrame(y_truetest)], axis=1)
     pd_result.to_csv('my_submission.csv')
+
