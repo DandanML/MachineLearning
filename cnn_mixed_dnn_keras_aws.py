@@ -62,6 +62,7 @@ if __name__ == '__main__':
     model_filename = "cnn_model_" + data_filename + ".json"
     model_weight_filename = "cnn_model_"+data_filename + ".h5"
     encoder_class_filename= data_filename + "_encoder_class.npy"
+   # read dataset directly from the file stored in S3 bucket.
     bucket = 'temp-datasets' #bucketname
     s3 = boto3.client('s3')
     obj = s3.get_object(Bucket=bucket, Key=data_filename)
