@@ -11,6 +11,7 @@ from keras.callbacks import EarlyStopping
 from keras.models import model_from_json
 from sklearn.preprocessing import LabelEncoder
 from keras.layers import Conv2D, MaxPooling2D,Flatten, concatenate
+from keras.callbacks import CSVLogger
 import pandas as pd
 import gzip
 import boto3
@@ -40,9 +41,16 @@ def train_model(X_train_cnn_input, X_train_dnn_input, dummy_y_train, input_shape
     print(model.summary())
     tic = time.clock()
     earlyStopping = EarlyStopping(monitor='val_loss', min_delta=1e-6, patience=10, verbose=2, mode='auto') 
+	log_filename ='training_result.csv'
+    model_filename = "cnn_model_" + ".json"
+    model_weight_filename = "cnn_model_"+ ".h5"
+    encoder_class_filename= "encoder_class.npy"
+	csv_logger = CSVLogger(log_filename, append=False, separator=',')
+    checkpoint = ModelCheckpoint(model_weight_filename, monitor='val_acc', verbose=0, save_best_only=True, mode='max')
+    callbacks_list = [early_stop, csv_logger, checkpoint]
 	#note that earlyStopping is good for initial fast prototyping. After choosing the model, it is better to let it train longer time to get the accuracy. 
     model.fit([X_train_cnn_input, X_train_dnn_input], dummy_y_train, epochs=200, batch_size=512, validation_split=0.1, validation_data=None,
-              callbacks=[earlyStopping], verbose=2, shuffle=True)
+              callbacks=callbacks_list, verbose=2, shuffle=True)
     toc = time.clock()
     # save the model
  #   model_json = model.to_json()
@@ -58,10 +66,7 @@ def train_model(X_train_cnn_input, X_train_dnn_input, dummy_y_train, input_shape
     return num_parameter, score[1]
 
 if __name__ == '__main__':
-    data_filename = "xxx.csv.gz"
-    model_filename = "cnn_model_" + data_filename + ".json"
-    model_weight_filename = "cnn_model_"+data_filename + ".h5"
-    encoder_class_filename= data_filename + "_encoder_class.npy"
+	data_filename = "xxx.csv.gz"
     bucket = 'temp-datasets' #bucketname
     s3 = boto3.client('s3')
     obj = s3.get_object(Bucket=bucket, Key=data_filename)
