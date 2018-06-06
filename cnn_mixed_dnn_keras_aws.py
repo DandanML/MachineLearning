@@ -28,7 +28,7 @@ def cnn_model(input_shape_cnn, additional_input_shape, output_dim, f1, f2,k1, k2
     cnn_output = Flatten()(x)
     dnn_input = Input(shape=additional_input_shape, name='dnn_input')
     x = concatenate([cnn_output, dnn_input])
-    x = Dense(32, activation = 'relu')(x) #32 is just an example.
+    x = Dense(numofnodes, activation = 'relu')(x)
     predictions = Dense(output_dim, activation='softmax')(x)
     model = Model(inputs=[cnn_inputs, dnn_input], outputs=predictions)
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
