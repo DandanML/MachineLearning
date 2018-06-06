@@ -17,7 +17,7 @@ import boto3
 import io
 
 #using keras with tensorflow backend
-def cnn_model(input_shape_cnn, additional_input_shape, output_dim, f1, f2,k1, k2, k3, k4, p1, p2, s1, s2):
+def cnn_model(input_shape_cnn, additional_input_shape, output_dim, numofnodes, f1, f2,k1, k2, k3, k4, p1, p2, s1, s2):
     # this model is concatenate the output of CNN with additional input and then use them as input to FC DNN layer.    
    cnn_inputs = Input(shape=input_shape_cnn, name='cnn_input')
     x = Conv2D(f1, kernel_size=(k1, k2), padding='same', strides=(s1, s1),
@@ -34,8 +34,8 @@ def cnn_model(input_shape_cnn, additional_input_shape, output_dim, f1, f2,k1, k2
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
     return model
 
-def train_model(X_train_cnn_input, X_train_dnn_input, dummy_y_train, input_shape_cnn, additional_input_shape, output_dim, f1, f2, k1, k2, k3, k4, p1, p2, s1, s2):
-    model = cnn_model(input_shape_cnn, additional_input_shape, output_dim, f1, f2, k1, k2, k3, k4, p1, p2, s1, s2)
+def train_model(X_train_cnn_input, X_train_dnn_input, dummy_y_train, input_shape_cnn, additional_input_shape, output_dim,numofnodes, f1, f2, k1, k2, k3, k4, p1, p2, s1, s2):
+    model = cnn_model(input_shape_cnn, additional_input_shape, output_dim,numofnodes, f1, f2, k1, k2, k3, k4, p1, p2, s1, s2)
     num_parameter = model.count_params()
     print(model.summary())
     tic = time.clock()
@@ -101,6 +101,7 @@ if __name__ == '__main__':
     p2_array = [2]
     s1_array = [1]
     s2_array = [1]
+	numofnodes = 32
     for f1 in f1_array:
         for f2 in f2_array:
             for k1 in k1_array:
@@ -112,7 +113,7 @@ if __name__ == '__main__':
                                     for s1 in s1_array:
                                         for s2 in s2_array:
                                             if (4/s1/p1/s2/p2>=1):
-                                                [total_parameter, accuracy] = train_model(X_train_cnn_input, X_train_additional_input, dummy_y_train, input_shape_cnn, additional_input_shape, output_dim, f1, f2, k1, k2, k3, k4,p1,p2,s1, s2)
+                                                [total_parameter, accuracy] = train_model(X_train_cnn_input, X_train_additional_input, dummy_y_train, input_shape_cnn, additional_input_shape, output_dim,numofnodes, f1, f2, k1, k2, k3, k4,p1,p2,s1, s2)
                                                 result = "f1="+str(f1)+" f2="+str(f2)+ " k1="+str(k1)+" k2="+str(k2)+" k3="+str(k3)\
                                                          +" k4="+str(k4)+" p1="+str(p1)+" p2="+str(p2)+" s1="+str(s1)+" s2"+str(s2)\
                                                          +" totalpara="+str(total_parameter)+" accuracy="+str(accuracy)
