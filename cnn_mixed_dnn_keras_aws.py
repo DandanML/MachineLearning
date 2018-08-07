@@ -66,7 +66,7 @@ def train_model(X_train_cnn_input, X_train_dnn_input, dummy_y_train, input_shape
     return num_parameter, score[1]
 
 if __name__ == '__main__':
-	data_filename = "xxx.csv.gz"
+    data_filename = "xxx.csv.gz"
     bucket = 'temp-datasets' #bucketname
     s3 = boto3.client('s3')
     obj = s3.get_object(Bucket=bucket, Key=data_filename)
@@ -96,34 +96,10 @@ if __name__ == '__main__':
     X_train_cnn_input = X_train_cnn_input.reshape(num_samples, image_row_num, image_column_num, 1)
     input_shape_cnn = (image_row_num, image_column_num,1)
     additional_input_shape = (2*image_row_num,) # 2*image_row_num are the additional input features.
-    f1_array = [32]
-    f2_array = [32]
-    k1_array = [2]
-    k2_array = [2]
-    k3_array = [2]
-    k4_array = [2]
-    p1_array = [2]
-    p2_array = [2]
-    s1_array = [1]
-    s2_array = [1]
-	numofnodes = 32
-    for f1 in f1_array:
-        for f2 in f2_array:
-            for k1 in k1_array:
-                for k2 in k2_array:
-                    for k3 in k3_array:
-                        for k4 in k4_array:
-                            for p1 in p1_array:
-                                for p2 in p2_array:
-                                    for s1 in s1_array:
-                                        for s2 in s2_array:
-                                            if (4/s1/p1/s2/p2>=1):
-                                                [total_parameter, accuracy] = train_model(X_train_cnn_input, X_train_additional_input, dummy_y_train, input_shape_cnn, additional_input_shape, output_dim,numofnodes, f1, f2, k1, k2, k3, k4,p1,p2,s1, s2)
-                                                result = "f1="+str(f1)+" f2="+str(f2)+ " k1="+str(k1)+" k2="+str(k2)+" k3="+str(k3)\
-                                                         +" k4="+str(k4)+" p1="+str(p1)+" p2="+str(p2)+" s1="+str(s1)+" s2"+str(s2)\
-                                                         +" totalpara="+str(total_parameter)+" accuracy="+str(accuracy)
-                                                #k2, k3, k4,p1,p2,s1, s2, total_parameter, accuracy])
-                                                print(result)
-                                                hp = open("myresults.txt", "a")
-                                                hp.write(result+"\n")
-                                                hp.close()
+
+    [total_parameter, accuracy] = train_model(X_train_cnn_input, X_train_additional_input, dummy_y_train, input_shape_cnn, additional_input_shape, output_dim,numofnodes, f1, f2, k1, k2, k3, k4,p1,p2,s1, s2)
+    result = " totalpara="+str(total_parameter)+" accuracy="+str(accuracy)
+    print(result)
+    hp = open("myresults.txt", "a")
+    hp.write(result+"\n")
+    hp.close()
