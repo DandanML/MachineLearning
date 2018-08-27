@@ -18,7 +18,7 @@ import boto3
 import io
 
 #using keras with tensorflow backend
-def cnn_model(input_shape_cnn, additional_input_shape, output_dim, numofnodes, f1, f2,k1, k2, k3, k4, p1, p2, s1, s2):
+def cnn_model(input_shape_cnn, additional_input_shape, output_dim, numofnodes):
     # this model is concatenate the output of CNN with additional input and then use them as input to FC DNN layer.    
    cnn_inputs = Input(shape=input_shape_cnn, name='cnn_input')
     x = Conv2D(f1, kernel_size=(k1, k2), padding='same', strides=(s1, s1),
